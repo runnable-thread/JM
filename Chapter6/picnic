@@ -1,0 +1,56 @@
+
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <string>
+using namespace std;
+int TC;
+int n;
+int m;
+
+bool isFriend[10][10];
+bool isTaken[10];
+
+int countParing(){
+    int firstFree = -1;
+    for (int i = 0 ; i<n; i++){
+        if (!isTaken[i]){
+            firstFree = i ;
+            break;
+        }
+    }
+    if (firstFree == -1){
+        return 1;
+    }
+    else{
+        int ret = 0 ;
+        for ( int nextPair = firstFree+1 ; nextPair < n ;nextPair++){
+            if(!isTaken[nextPair] && isFriend[firstFree][nextPair] ){
+                isTaken[firstFree]= isTaken[nextPair] = true;
+                ret += countParing();
+                isTaken[firstFree]= isTaken[nextPair] = false;
+            }
+        }
+        return ret;
+    }
+}
+
+
+int main(){
+    scanf("%d", &TC);
+    while (TC--){
+        memset(isFriend,false,sizeof(isFriend));
+        memset(isTaken,false,sizeof(isTaken));
+        scanf("%d %d ", &n, &m);
+        for (int i = 0 ; i< m ; i++){
+            int first, second;
+            scanf("%d%d",&first, &second);
+            isFriend[first][second] = true;
+            isFriend[second][first] = true;
+        }
+        printf("%d\n",countParing());
+    }
+}
+
